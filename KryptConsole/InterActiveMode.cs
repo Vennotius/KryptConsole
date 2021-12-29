@@ -34,21 +34,21 @@ internal class InterActiveMode : IMode
         _cipherText = EncyptMessage(_passphrase, _message);
 
         Console.WriteLine("\n\n-----------\nCipherText:\n-----------");
-        OutputCipherText(Console.WriteLine, _cipherText);
+        OutputResult(Console.WriteLine, _cipherText);
     }
     private string EncyptMessage(string passphrase, string message)
     {
         var backgroundWorker = new BackgroundWorker();
         backgroundWorker.WorkerReportsProgress = true;
+        backgroundWorker.ProgressChanged += ReportProgress;
         var kryptor = new Kryptor(new Betor(), backgroundWorker);
 
         _cipherText = kryptor.Encrypt(passphrase, message);
         
         return _cipherText;
     }
-    
 
-    private void OutputCipherText(Action<string> outputMethod, string cipherText)
+    private void OutputResult(Action<string> outputMethod, string cipherText)
     {
         outputMethod(cipherText);
     }
@@ -59,5 +59,32 @@ internal class InterActiveMode : IMode
         _passphrase = PromptHelpers.PromptOnceForPassword(CryptType.Decryption);
 
         _message = DecryptMessage(_passphrase, _cipherText);
+
+        Console.WriteLine("\n\n-----------\nDecrypted Text:\n-----------");
+        OutputResult(Console.WriteLine, _message);
+    }
+
+    private string DecryptMessage(string passphrase, string cipherText)
+    {
+        BackgroundWorker backgroundWorker = CreateBackgroundWorker();
+        var kryptor = new Kryptor(new Betor(), backgroundWorker);
+
+        _message = kryptor.Decrypt(passphrase, cipherText);
+
+        return _message;
+    }
+
+    private BackgroundWorker CreateBackgroundWorker()
+    {
+        var backgroundWorker = new BackgroundWorker();
+        backgroundWorker.WorkerReportsProgress = true;
+        backgroundWorker.ProgressChanged += ReportProgress;
+
+        return backgroundWorker;
+    }
+
+    private void ReportProgress(object? sender, ProgressChangedEventArgs e)
+    {
+        Console.Write('.');
     }
 }
