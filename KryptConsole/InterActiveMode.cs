@@ -1,4 +1,5 @@
 ﻿using Krypt2Library;
+using System.ComponentModel;
 
 internal class InterActiveMode : IMode
 {
@@ -27,76 +28,36 @@ internal class InterActiveMode : IMode
 
     private void Encryption()
     {
-        _message = PromptForMessage();
-        _passphrase = PromptOnceForPassphrase(CryptType.Encryption);
+        _message = PromptHelpers.PromptForMessage();
+        _passphrase = PromptHelpers.PromptOnceForPassword(CryptType.Encryption);
+
+        _cipherText = EncyptMessage(_passphrase, _message);
+
+        Console.WriteLine("\n\n-----------\nCipherText:\n-----------");
+        OutputCipherText(Console.WriteLine, _cipherText);
     }
-    private string PromptForMessage()
+    private string EncyptMessage(string passphrase, string message)
     {
-        return Prompt("\nMessage:\n");
+        var backgroundWorker = new BackgroundWorker();
+        backgroundWorker.WorkerReportsProgress = true;
+        var kryptor = new Kryptor(new Betor(), backgroundWorker);
+
+        _cipherText = kryptor.Encrypt(passphrase, message);
+        
+        return _cipherText;
     }
-    private string PromptTwiceForPassphrase()
+    
+
+    private void OutputCipherText(Action<string> outputMethod, string cipherText)
     {
-        string output = "";
-
-        var firstInput = Prompt("\nPassphrase: ");
-        var secondInput = Prompt("Enter it again: ");
-
-        if (firstInput == secondInput)
-        {
-            output = firstInput;
-        }
-        else
-        {
-            Console.WriteLine("Second input did not match the first. Try again...");
-            PromptTwiceForPassphrase();
-        }
-
-        return output;
+        outputMethod(cipherText);
     }
 
     private void Decryption()
     {
-        _cipherText = PromptForCipherText();
-        _passphrase = PromptOnceForPassphrase(CryptType.Decryption);
-    }
-    private string PromptForCipherText()
-    {
-        return Prompt("\nEnter text to decrypt:\n");
-    }
-    private string PromptOnceForPassphrase(CryptType type)
-    {
-        string output = "";
-        
-        switch (type)
-        {
-            case CryptType.Encryption:
-                output = PromptTwiceForPassphrase();
-                break;
-            case CryptType.Decryption:
-                output = Prompt("\nPassphrase: ");
-                break;
-        }
+        _cipherText = PromptHelpers.PromptForCipherText();
+        _passphrase = PromptHelpers.PromptOnceForPassword(CryptType.Decryption);
 
-        return output;
-    }
-    
-    private string Prompt(string promptMessage)
-    {
-        string output = "";
-
-        Console.Write(promptMessage);
-        var input = Console.ReadLine();
-
-        if (string.IsNullOrEmpty(input))
-        {
-            Console.WriteLine("Invalid input. Try again...");
-            output = Prompt(promptMessage);
-        }
-        else
-        {
-            output = input;
-        }
-
-        return output;
+        _message = DecryptMessage(_passphrase, _cipherText);
     }
 }
