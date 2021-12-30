@@ -32,6 +32,8 @@ internal class HandleFilesMode: IMode
             return;
         }
         
+        ListFilesOnConsole();
+
         if (WhatToDo == null)
         {
             WhatToDo = PromptForDesiredActivity();
@@ -47,9 +49,23 @@ internal class HandleFilesMode: IMode
                 }
                 break;
             case CryptType.Decryption:
-                Decrypt();
+                foreach (var filename in FileNames)
+                {
+                    var cipherText = File.ReadAllText(filename);
+                    Decrypt(filename, cipherText);
+                }
                 break;
         }
+    }
+
+    private void ListFilesOnConsole()
+    {
+        Console.WriteLine("Files:");
+        foreach (var filename in FileNames)
+        {
+            Console.WriteLine(filename);
+        }
+        Console.WriteLine();
     }
 
     private CryptType PromptForDesiredActivity()
@@ -77,25 +93,8 @@ internal class HandleFilesMode: IMode
 
         var cipherText = EncyptMessage(passphrase, message);
 
-        SaveCipherTextToFile(filename, ".krypt", cipherText);
-    }
-
-    private void SaveCipherTextToFile(string filename, string newExtension, string cipherText)
-    {
-        filename = $"{filename}{newExtension}";
-        {
-            File.WriteAllText(filename, cipherText);
-            Console.WriteLine($"Written to file '{filename}'.");
-        }
-    }
-
-    private void SavePlainTextToFile(string filename, string plainText)
-    {
-        filename = Path.GetFileNameWithoutExtension(filename);
-        {
-            File.WriteAllText(filename, plainText);
-            Console.WriteLine($"Written to file '{filename}'.");
-        }
+        ShowResultsOnScreen(cipherText);
+        PromptToSaveFile(cipherText);
     }
 
     private string EncyptMessage(string passphrase, string message)
@@ -107,15 +106,49 @@ internal class HandleFilesMode: IMode
 
         return cipherText;
     }
-
-    private void Decrypt()
+    private void PromptToSaveFile(string cipherText)
     {
-        foreach (var item in FileNames)
+        string filename = PromptHelpers.PromptIfWantToSaveToFile();
+
+        if (string.IsNullOrWhiteSpace(filename) == false)
         {
-            Console.WriteLine(item);
+            SaveToFile(filename, cipherText);
         }
     }
+    private void SaveToFile(string filename, string text)
+    {
+        //if (File.Exists($"{filename}{newExtension}"))
+        //{
+        //    filename = filename + $"({DateTime.Now.ToString("yyyy-MM-dd HHmm")})";
+        //}
 
+        File.WriteAllText(filename, text);
+        Console.WriteLine($"Written to file '{filename}'.");
+    }
+
+
+
+    private void Decrypt(string filename, string cipherText)
+    {
+        Console.WriteLine($"Decrypting '{filename}':");
+        var passphrase = PromptHelpers.PromptForPassword(CryptType.Decryption);
+        Console.WriteLine();
+
+        var plainText = DecyptMessage(passphrase, cipherText);
+
+        ShowResultsOnScreen(plainText);
+        PromptToSaveFile(plainText);
+    }
+
+    private string DecyptMessage(string passphrase, string cipherText)
+    {
+        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
+        var kryptor = new Kryptor(new Betor(), backgroundWorker);
+
+        var plainText = kryptor.Decrypt(passphrase, cipherText);
+
+        return plainText;
+    }
 
     private bool isValidFile(string arg)
     {
@@ -125,4 +158,21 @@ internal class HandleFilesMode: IMode
 
         return output;
     }
+
+    private void ShowResultsOnScreen(string results)
+    {
+        Console.WriteLine("\n\n-------\nResult:\n-------");
+        Console.WriteLine(results);
+    }
+
+    //private void SavePlainTextToFile(string filename, string plainText)
+    //{
+    //    filename = Path.GetFileNameWithoutExtension(filename);
+    //    if (File.Exists(filename))
+    //    {
+    //        filename = Path.GetFileNameWithoutExtension(filename) + $"({DateTime.Now.ToString("yyyy-MM-dd HHmm")})" + Path.GetExtension(filename);
+    //    }
+    //    File.WriteAllText(filename, plainText);
+    //    Console.WriteLine($"Written to file '{filename}'.");
+    //}
 }
