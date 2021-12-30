@@ -1,5 +1,4 @@
 ﻿using Krypt2Library;
-using System.ComponentModel;
 
 internal class InterActiveMode : IMode
 {
@@ -40,7 +39,7 @@ internal class InterActiveMode : IMode
     }
     private string EncyptMessage(string passphrase, string message)
     {
-        var backgroundWorker = CreateBackgroundWorker();
+        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         var kryptor = new Kryptor(new Betor(), backgroundWorker);
 
         _cipherText = kryptor.Encrypt(passphrase, message);
@@ -62,7 +61,7 @@ internal class InterActiveMode : IMode
     }
     private string DecryptMessage(string passphrase, string cipherText)
     {
-        var backgroundWorker = CreateBackgroundWorker();
+        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         var kryptor = new Kryptor(new Betor(), backgroundWorker);
 
         _message = kryptor.Decrypt(passphrase, cipherText);
@@ -85,19 +84,4 @@ internal class InterActiveMode : IMode
             Console.WriteLine($"Written to file '{filename}'.");
         }
     }
-
-
-    private BackgroundWorker CreateBackgroundWorker()
-    {
-        var backgroundWorker = new BackgroundWorker();
-        backgroundWorker.WorkerReportsProgress = true;
-        backgroundWorker.ProgressChanged += ReportProgress;
-
-        return backgroundWorker;
-    }
-    private void ReportProgress(object? sender, ProgressChangedEventArgs e)
-    {
-        Console.WriteLine($"Pass {e.ProgressPercentage}/8.");
-    }
 }
-
