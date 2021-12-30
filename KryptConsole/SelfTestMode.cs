@@ -1,4 +1,5 @@
 ﻿using Krypt2Library;
+using System.Diagnostics;
 
 internal class SelfTestMode : IMode
 {
@@ -11,30 +12,62 @@ internal class SelfTestMode : IMode
     string _plainText3 =  "Behold, I am sending you out as sheep in the midst of wolves, so be wise as serpents and innocent as doves. Beware of men, for they will deliver you over to courts and flog you in their synagogues, and you will be dragged before governors and kings for my sake, to bear witness before them and the Gentiles. When they deliver you over, do not be anxious how you are to speak or what you are to say, for what you are to say will be given to you in that hour. For it is not you who speak, but the Spirit of your Father speaking through you. Brother will deliver brother over to death, and the father his child, and children will rise against parents and have them put to death, and you will be hated by all for my name's sake. But the one who endures to the end will be saved.";
     string _cipherText3 = "lM0jJoSt5t8)!*-tym(;8d'M&%u.&-#EvUI-MVoK+*V)Xdt*c ub'(ZhlH,CnBXz!SG.Pv5O(q#$u#m4@9w NWTd'vM&8-F7XqCLxyLIGygn,emk@QpVJEN0: 95Q?e(- ZNU$z2i&cjCbf6O;gA.28kY?3khf3u!vOS94Lv'3v,r43qCe8 )ap$MSjHU;w5Dt+R!jiWJOvsP2vS+3w))Lw?un 9HWiv1@'y@?;NB1;1P6tKZIIJqS@H u.8wj75\"39,g+WkwCL!*,TjlI*2IV!Z97:Qy'&06yqi\"Wy8m,fsb1YvJ;ieqe4?.KG+CB@J&v;im3DW;r3.er.Q3q!K zOCD'gCIr!lw'McRZrW7,6w+53h8YN6F:1ZH@\"J:P+WjvV%$3HQ'xcQj+C*L(Ub-Habf#zNoNU46en'UBdhlKNRb0?nSa9J:kApjf\"$VNINirl$;bKQG!:S,rA; KBTa8&(4fmpw74y6bq7Fq-EJSXlDrLx,hW4H$fc1 i@h!5K%kBrWt(zy3D310XLr.sU+Z*B% *vrA.E' U4ap1ry.&(yf.dEKmRp2z*(Nn0*A*Qo!2Rr 33Qe7h )Z1-DDuu;6mS:k45;@1YjT:7mH1D\"AN9fYTi(H3vRcFg6f6DzW9@P4g,7GXJXXk(j.Ij :r:u\"zHx&9*Y)WeWdUsILd#9d6u%ehMGhYxo0?&WYikN3C@G88amy$.&&*8Awx1nyJAsn*#PZm3q5(MLC1hfXMMAz+#He6l:SKfPwSr gUiAoN.zDifw";
 
+    Stopwatch _stopwatch = new Stopwatch();
+
     public void Run()
     {
+        RunTestsAndReportResults();
+
+        ReportStatistics();
+    }
+
+    private void RunTestsAndReportResults()
+    {
         var results = 0;
+
         if (Test(_plainText1, _cipherText1) == true) results++;
         if (Test(_plainText2, _cipherText2) == true) results++;
         if (Test(_plainText3, _cipherText3) == true) results++;
 
         Console.WriteLine($"\n{results}/3 tests passed.");
     }
-
     private bool Test(string plainText, string cipherText)
     {
         bool result;
-        
+
         var kryptor = new Kryptor(new Betor(), BackgroundWorkerHelpers.CreateBackgroundWorker());
 
+        string testCipherText = FirstTest(plainText, cipherText, kryptor);
+        string testPlainText = SecondTest(cipherText, kryptor);
+        result = CheckResults(plainText, cipherText, testCipherText, testPlainText);
+
+        return result;
+    }
+
+    private string FirstTest(string plainText, string cipherText, Kryptor kryptor)
+    {
         Console.WriteLine($"\nChecking:\n\n{plainText}\n");
+
+        _stopwatch.Start();
         var testCipherText = kryptor.Encrypt("Jesus", plainText);
+        _stopwatch.Stop();
+
         Console.WriteLine($"Encrypted as:\n\n{testCipherText}\n");
         Console.WriteLine($"Which should match:\n\n{cipherText}\n");
+        return testCipherText;
+    }
+    private string SecondTest(string cipherText, Kryptor kryptor)
+    {
+        _stopwatch.Start();
         var testPlainText = kryptor.Decrypt("Jesus", cipherText);
+        _stopwatch.Stop();
+
         Console.WriteLine($"\nDecrypted as:\n\n{testPlainText}\n");
-
-
+        return testPlainText;
+    }
+    private static bool CheckResults(string plainText, string cipherText, string testCipherText, string testPlainText)
+    {
+        bool result;
         if (cipherText == testCipherText && plainText == testPlainText)
         {
             Console.WriteLine("TEST PASSED");
@@ -47,5 +80,23 @@ internal class SelfTestMode : IMode
         }
 
         return result;
+    }
+
+    private void ReportStatistics()
+    {
+        var totalLength = _plainText1.Length;
+        totalLength += _plainText2.Length;
+        totalLength += _plainText3.Length;
+        totalLength += _cipherText1.Length;
+        totalLength += _cipherText2.Length;
+        totalLength += _cipherText3.Length;
+
+        var totalTime = _stopwatch.Elapsed.TotalSeconds;
+
+        Console.WriteLine("\nStatistics:\n-----------");
+        Console.WriteLine($"\nEncrypted & Decrypted {totalLength} characters in {totalTime:0.00} seconds.");
+        Console.WriteLine($"\n{(totalLength / totalTime):0.0} characters per second.");
+        Console.WriteLine($"{(totalLength / totalTime) * 60:0} characters per minute.");
+        Console.WriteLine($"{(totalLength / totalTime) * 60 * 60:0} characters per hour.\n");
     }
 }

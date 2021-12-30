@@ -14,4 +14,5 @@ switch (args.Length)
         mode = new HandleFilesMode(args);
         break;
 }
+
 mode.Run();
