@@ -31,13 +31,13 @@ internal class InterActiveMode : IMode
     {
         _message = PromptHelpers.PromptForMessage();
         _passphrase = PromptHelpers.PromptOnceForPassword(CryptType.Encryption);
+        Console.WriteLine();
         _cipherText = EncyptMessage(_passphrase, _message);
         
         ShowResultsOnScreen(_cipherText);
 
         SaveToFile();
     }
-
     private string EncyptMessage(string passphrase, string message)
     {
         var backgroundWorker = CreateBackgroundWorker();
@@ -53,13 +53,13 @@ internal class InterActiveMode : IMode
     {
         _cipherText = PromptHelpers.PromptForCipherText();
         _passphrase = PromptHelpers.PromptOnceForPassword(CryptType.Decryption);
+        Console.WriteLine();
         _message = DecryptMessage(_passphrase, _cipherText);
 
         ShowResultsOnScreen(_message);
 
         SaveToFile();
     }
-
     private string DecryptMessage(string passphrase, string cipherText)
     {
         var backgroundWorker = CreateBackgroundWorker();
@@ -73,10 +73,9 @@ internal class InterActiveMode : IMode
 
     private void ShowResultsOnScreen(string results)
     {
-        Console.WriteLine("\n\n-----------\nResult:\n-----------");
+        Console.WriteLine("\n\n-------\nResult:\n-------");
         Console.WriteLine(results);
     }
-
     private void SaveToFile()
     {
         var filename = PromptHelpers.PromptIfWantToSaveToFile();
@@ -96,10 +95,9 @@ internal class InterActiveMode : IMode
 
         return backgroundWorker;
     }
-
     private void ReportProgress(object? sender, ProgressChangedEventArgs e)
     {
-        Console.Write('.');
+        Console.WriteLine($"Pass {e.ProgressPercentage}/8.");
     }
 }
 
