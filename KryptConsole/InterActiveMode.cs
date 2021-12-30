@@ -33,7 +33,7 @@ internal class InterActiveMode : IMode
         _passphrase = PromptHelpers.PromptOnceForPassword(CryptType.Encryption);
         _cipherText = EncyptMessage(_passphrase, _message);
         
-        ShowResultsOnScreen();
+        ShowResultsOnScreen(_cipherText);
 
         SaveToFile();
     }
@@ -53,11 +53,11 @@ internal class InterActiveMode : IMode
     {
         _cipherText = PromptHelpers.PromptForCipherText();
         _passphrase = PromptHelpers.PromptOnceForPassword(CryptType.Decryption);
-
         _message = DecryptMessage(_passphrase, _cipherText);
 
-        Console.WriteLine("\n\n-----------\nDecrypted Text:\n-----------");
-        Console.WriteLine(_message);
+        ShowResultsOnScreen(_message);
+
+        SaveToFile();
     }
 
     private string DecryptMessage(string passphrase, string cipherText)
@@ -71,10 +71,10 @@ internal class InterActiveMode : IMode
     }
     
 
-    private void ShowResultsOnScreen()
+    private void ShowResultsOnScreen(string results)
     {
-        Console.WriteLine("\n\n-----------\nCipherText:\n-----------");
-        Console.WriteLine(_cipherText);
+        Console.WriteLine("\n\n-----------\nResult:\n-----------");
+        Console.WriteLine(results);
     }
 
     private void SaveToFile()
