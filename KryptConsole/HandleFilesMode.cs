@@ -87,8 +87,8 @@ internal class HandleFilesMode: IMode
 
     private void Encrypt(string filename, string message)
     {
-        Console.WriteLine($"Encrypting '{filename}':");
         var passphrase = PromptHelpers.PromptForPassword(CryptType.Encryption);
+        Console.WriteLine($"\nEncrypting '{filename}':");
         Console.WriteLine();
 
         var cipherText = EncyptMessage(passphrase, message);
@@ -127,11 +127,10 @@ internal class HandleFilesMode: IMode
     }
 
 
-
     private void Decrypt(string filename, string cipherText)
     {
-        Console.WriteLine($"Decrypting '{filename}':");
         var passphrase = PromptHelpers.PromptForPassword(CryptType.Decryption);
+        Console.WriteLine($"\nDecrypting '{filename}':");
         Console.WriteLine();
 
         var plainText = DecyptMessage(passphrase, cipherText);
@@ -164,15 +163,4 @@ internal class HandleFilesMode: IMode
         Console.WriteLine("\n\n-------\nResult:\n-------");
         Console.WriteLine(results);
     }
-
-    //private void SavePlainTextToFile(string filename, string plainText)
-    //{
-    //    filename = Path.GetFileNameWithoutExtension(filename);
-    //    if (File.Exists(filename))
-    //    {
-    //        filename = Path.GetFileNameWithoutExtension(filename) + $"({DateTime.Now.ToString("yyyy-MM-dd HHmm")})" + Path.GetExtension(filename);
-    //    }
-    //    File.WriteAllText(filename, plainText);
-    //    Console.WriteLine($"Written to file '{filename}'.");
-    //}
 }
