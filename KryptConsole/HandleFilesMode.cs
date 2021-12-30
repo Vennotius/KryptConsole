@@ -18,7 +18,7 @@ internal class HandleFilesMode: IMode
                     WhatToDo = CryptType.Decryption;
                     break;
                 default:
-                    if (isValidFile(arg)) FileNames.Add(arg);
+                    if (IsValidFile(arg)) FileNames.Add(arg);
                     break;
             }
         }
@@ -149,7 +149,7 @@ internal class HandleFilesMode: IMode
         return plainText;
     }
 
-    private bool isValidFile(string arg)
+    private bool IsValidFile(string arg)
     {
         bool output = true;
         

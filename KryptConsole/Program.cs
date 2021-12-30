@@ -2,17 +2,16 @@
 
 IMode mode;
 
-if (args.Length == 0)
+switch (args.Length)
 {
-    mode = new InterActiveMode();
+    case 0:
+        mode = new InterActiveMode();
+        break;
+    case 1 when args[0] == "--test":
+        mode = new SelfTestMode();
+        break;
+    default:
+        mode = new HandleFilesMode(args);
+        break;
 }
-else if (args.Length == 1 && args[0] == "--test")
-{
-    mode = new SelfTestMode();
-}
-else
-{
-    mode = new HandleFilesMode(args);
-}
-
 mode.Run();
