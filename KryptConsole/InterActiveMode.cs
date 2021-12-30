@@ -29,7 +29,7 @@ internal class InterActiveMode : IMode
     private void Encryption()
     {
         _message = PromptHelpers.PromptForMessage();
-        _passphrase = PromptHelpers.PromptOnceForPassword(CryptType.Encryption);
+        _passphrase = PromptHelpers.PromptForPassword(CryptType.Encryption);
         Console.WriteLine();
         _cipherText = EncyptMessage(_passphrase, _message);
         
@@ -51,7 +51,7 @@ internal class InterActiveMode : IMode
     private void Decryption()
     {
         _cipherText = PromptHelpers.PromptForCipherText();
-        _passphrase = PromptHelpers.PromptOnceForPassword(CryptType.Decryption);
+        _passphrase = PromptHelpers.PromptForPassword(CryptType.Decryption);
         Console.WriteLine();
         _message = DecryptMessage(_passphrase, _cipherText);
 

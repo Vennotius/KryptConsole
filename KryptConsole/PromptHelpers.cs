@@ -10,8 +10,8 @@ public static class PromptHelpers
     {
         string output = "";
 
-        var firstInput = PromptForPassword("\nPassphrase: ");
-        var secondInput = PromptForPassword("\nEnter it again: ");
+        var firstInput = PromptOnceForPassword("\nPassphrase: ");
+        var secondInput = PromptOnceForPassword("\nEnter it again: ");
 
         if (firstInput == secondInput)
         {
@@ -30,7 +30,7 @@ public static class PromptHelpers
     {
         return Prompt("\nEnter text to decrypt:\n");
     }
-    public static string PromptOnceForPassword(CryptType type)
+    public static string PromptForPassword(CryptType type)
     {
         string output = "";
 
@@ -40,7 +40,7 @@ public static class PromptHelpers
                 output = PromptTwiceForPassword();
                 break;
             case CryptType.Decryption:
-                output = PromptForPassword("\nPassphrase: ");
+                output = PromptOnceForPassword("\nPassphrase: ");
                 break;
         }
 
@@ -66,7 +66,7 @@ public static class PromptHelpers
 
         return output;
     }
-    public static string PromptForPassword(string promptMessage)
+    public static string PromptOnceForPassword(string promptMessage)
     {
         string output = "";
 
@@ -76,7 +76,7 @@ public static class PromptHelpers
         if (string.IsNullOrWhiteSpace(input))
         {
             Console.WriteLine("Invalid input. Try again...");
-            output = PromptForPassword(promptMessage);
+            output = PromptOnceForPassword(promptMessage);
         }
         else
         {
