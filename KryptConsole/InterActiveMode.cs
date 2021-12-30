@@ -26,6 +26,7 @@ internal class InterActiveMode : IMode
         }
     }
 
+
     private void Encryption()
     {
         _message = PromptHelpers.PromptForMessage();
@@ -35,6 +36,8 @@ internal class InterActiveMode : IMode
 
         Console.WriteLine("\n\n-----------\nCipherText:\n-----------");
         OutputResult(Console.WriteLine, _cipherText);
+        
+        SaveToFile();
     }
     private string EncyptMessage(string passphrase, string message)
     {
@@ -48,10 +51,6 @@ internal class InterActiveMode : IMode
         return _cipherText;
     }
 
-    private void OutputResult(Action<string> outputMethod, string cipherText)
-    {
-        outputMethod(cipherText);
-    }
 
     private void Decryption()
     {
@@ -63,7 +62,6 @@ internal class InterActiveMode : IMode
         Console.WriteLine("\n\n-----------\nDecrypted Text:\n-----------");
         OutputResult(Console.WriteLine, _message);
     }
-
     private string DecryptMessage(string passphrase, string cipherText)
     {
         BackgroundWorker backgroundWorker = CreateBackgroundWorker();
@@ -73,6 +71,22 @@ internal class InterActiveMode : IMode
 
         return _message;
     }
+    
+
+    private void OutputResult(Action<string> outputMethod, string cipherText)
+    {
+        outputMethod(cipherText);
+    }
+    private void SaveToFile()
+    {
+        var filename = PromptHelpers.PromptIfWantToSaveToFile();
+        if (string.IsNullOrWhiteSpace(filename) == false)
+        {
+            File.WriteAllText(filename, _cipherText);
+            Console.WriteLine($"Written to file '{filename}'.");
+        }
+    }
+
 
     private BackgroundWorker CreateBackgroundWorker()
     {
@@ -82,9 +96,9 @@ internal class InterActiveMode : IMode
 
         return backgroundWorker;
     }
-
     private void ReportProgress(object? sender, ProgressChangedEventArgs e)
     {
         Console.Write('.');
     }
 }
+

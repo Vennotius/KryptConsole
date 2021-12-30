@@ -110,4 +110,30 @@ public static class PromptHelpers
 
         return output;
     }
+
+
+    public static string PromptIfWantToSaveToFile()
+    {
+        var output = "";
+        
+        var shouldSaveToFile = PromptHelpers.Prompt("\nDo you want to save this to a file (y/n)? ").ToLower();
+        if (shouldSaveToFile == "y" || shouldSaveToFile == "yes")
+        {
+            output = PromptForFilename();
+        }
+
+        return output;
+    }
+    public static string PromptForFilename()
+    {
+        var output = PromptHelpers.Prompt("Enter filename: ");
+
+        if (File.Exists(output) == true)
+        {
+            Console.WriteLine("That file already exists. Enter a filename for a file that does not exist.");
+            PromptForFilename();
+        }
+
+        return output;
+    }
 }
