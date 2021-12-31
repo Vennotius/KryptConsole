@@ -12,6 +12,12 @@ public static class BackgroundWorkerHelpers
     }
     private static void ReportProgress(object? sender, ProgressChangedEventArgs e)
     {
-        Console.WriteLine($"Pass {e.ProgressPercentage}/8.");
+        Console.CursorVisible = false;
+        
+        var cursorPosition = Console.GetCursorPosition();
+        var progress = $"Progress: {e.ProgressPercentage}%";
+        
+        Console.Write(progress);
+        Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
     }
 }
