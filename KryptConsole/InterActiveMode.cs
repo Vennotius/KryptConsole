@@ -31,8 +31,10 @@ internal class InterActiveMode : IMode
         _message = PromptHelpers.PromptForMessage();
         _passphrase = PromptHelpers.PromptForPassword(CryptType.Encryption);
         Console.WriteLine();
+
+        Console.CursorVisible = false;
         _cipherText = EncyptMessage(_passphrase, _message);
-        
+        Console.CursorVisible = true;
         ShowResultsOnScreen(_cipherText);
 
         SaveToFile();
@@ -43,7 +45,7 @@ internal class InterActiveMode : IMode
         var kryptor = new Kryptor(new Betor(), backgroundWorker);
 
         _cipherText = kryptor.Encrypt(passphrase, message);
-        
+
         return _cipherText;
     }
 
@@ -53,7 +55,10 @@ internal class InterActiveMode : IMode
         _cipherText = PromptHelpers.PromptForCipherText();
         _passphrase = PromptHelpers.PromptForPassword(CryptType.Decryption);
         Console.WriteLine();
+
+        Console.CursorVisible = false;
         _message = DecryptMessage(_passphrase, _cipherText);
+        Console.CursorVisible = true;
 
         ShowResultsOnScreen(_message);
 

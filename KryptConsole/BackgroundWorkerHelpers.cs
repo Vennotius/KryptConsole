@@ -12,8 +12,6 @@ public static class BackgroundWorkerHelpers
     }
     private static void ReportProgress(object? sender, ProgressChangedEventArgs e)
     {
-        Console.CursorVisible = false;
-        
         var cursorPosition = Console.GetCursorPosition();
         var progress = $"Progress: {e.ProgressPercentage}%";
         
