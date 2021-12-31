@@ -16,6 +16,6 @@ public static class BackgroundWorkerHelpers
         var progress = $"Progress: {e.ProgressPercentage}%";
         
         Console.Write(progress);
-        Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
+        Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top-1);
     }
 }

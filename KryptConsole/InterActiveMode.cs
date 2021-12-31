@@ -1,10 +1,12 @@
 ﻿using Krypt2Library;
+using System.Diagnostics;
 
 internal class InterActiveMode : IMode
 {
     private string _message = "";
     private string _passphrase = "";
     private string _cipherText = "";
+    private Stopwatch _stopwatch = new Stopwatch();
 
     public void Run()
     {
@@ -42,6 +44,8 @@ internal class InterActiveMode : IMode
     private string EncyptMessage(string passphrase, string message)
     {
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
+        backgroundWorker.ProgressChanged += ReportTimeRemaining;
+
         var kryptor = new Kryptor(new Betor(), backgroundWorker);
 
         _cipherText = kryptor.Encrypt(passphrase, message);
@@ -67,6 +71,8 @@ internal class InterActiveMode : IMode
     private string DecryptMessage(string passphrase, string cipherText)
     {
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
+        backgroundWorker.ProgressChanged += ReportTimeRemaining;
+
         var kryptor = new Kryptor(new Betor(), backgroundWorker);
 
         _message = kryptor.Decrypt(passphrase, cipherText);
@@ -88,5 +94,24 @@ internal class InterActiveMode : IMode
             File.WriteAllText(filename, _cipherText);
             Console.WriteLine($"Written to file '{filename}'.");
         }
+    }
+    
+    private void ReportTimeRemaining(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
+    {
+        if (e.ProgressPercentage == 0)
+        {
+            _stopwatch.Start();
+            var cursorPosition = Console.GetCursorPosition();
+            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top + 1);
+            return;
+        }
+
+        var elapsed = _stopwatch.Elapsed.TotalSeconds;
+        var projected = elapsed * (100 / (double)e.ProgressPercentage);
+        var remaining = TimeSpan.FromSeconds(projected - elapsed + 1);
+
+        Console.WriteLine($"Time Remaining: {remaining.PrettyHours()}");
+
+        if (e.ProgressPercentage == 100) _stopwatch.Reset();
     }
 }
