@@ -1,7 +1,9 @@
 ﻿using Krypt2Library;
+using System.Diagnostics;
 
 internal class HandleFilesMode: IMode
 {
+    private Stopwatch _stopwatch = new Stopwatch();
     List<string> FileNames { get; set; } = new List<string>();
     CryptType? WhatToDo { get; set; } = null;
 
@@ -91,7 +93,9 @@ internal class HandleFilesMode: IMode
         Console.WriteLine($"\nEncrypting '{filename}':");
         Console.WriteLine();
 
+        Console.CursorVisible = false;
         var cipherText = EncyptMessage(passphrase, message);
+        Console.CursorVisible = true;
 
         ShowResultsOnScreen(cipherText);
         PromptToSaveFile(cipherText);
@@ -100,6 +104,8 @@ internal class HandleFilesMode: IMode
     private string EncyptMessage(string passphrase, string message)
     {
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
+        backgroundWorker.ProgressChanged += ReportTimeRemaining;
+
         var kryptor = new Kryptor(new Betor(), backgroundWorker);
 
         var cipherText = kryptor.Encrypt(passphrase, message);
@@ -133,7 +139,9 @@ internal class HandleFilesMode: IMode
         Console.WriteLine($"\nDecrypting '{filename}':");
         Console.WriteLine();
 
+        Console.CursorVisible = false;
         var plainText = DecyptMessage(passphrase, cipherText);
+        Console.CursorVisible = true;
 
         ShowResultsOnScreen(plainText);
         PromptToSaveFile(plainText);
@@ -142,6 +150,8 @@ internal class HandleFilesMode: IMode
     private string DecyptMessage(string passphrase, string cipherText)
     {
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
+        backgroundWorker.ProgressChanged += ReportTimeRemaining;
+
         var kryptor = new Kryptor(new Betor(), backgroundWorker);
 
         var plainText = kryptor.Decrypt(passphrase, cipherText);
@@ -162,5 +172,24 @@ internal class HandleFilesMode: IMode
     {
         Console.WriteLine("\n\n-------\nResult:\n-------");
         Console.WriteLine(results);
+    }
+
+    private void ReportTimeRemaining(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
+    {
+        if (e.ProgressPercentage == 0)
+        {
+            _stopwatch.Start();
+            var cursorPosition = Console.GetCursorPosition();
+            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top + 1);
+            return;
+        }
+
+        var elapsed = _stopwatch.Elapsed.TotalSeconds;
+        var projected = elapsed * (100 / (double)e.ProgressPercentage);
+        var remaining = TimeSpan.FromSeconds(projected - elapsed + 1);
+
+        Console.WriteLine($"Time Remaining: {remaining.PrettyHours()}");
+
+        if (e.ProgressPercentage == 100) _stopwatch.Reset();
     }
 }
