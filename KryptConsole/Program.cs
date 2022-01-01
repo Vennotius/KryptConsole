@@ -13,6 +13,9 @@ switch (args.Length)
     case 1 when args[0] == "--benchmark":
         mode = new BenchmarkMode();
         break;
+    case 1 when args[0] == "--help" || args[0] == "help" || args[0] == "-h" || args[0] == "-H":
+        mode = new ShowHelpMode();
+        break;
     default:
         mode = new HandleFilesMode(args);
         break;
