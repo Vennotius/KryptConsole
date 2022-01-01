@@ -9,7 +9,7 @@ internal class SelfTestMode : IMode
     string _plainText2 = "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.";
     string _cipherText2 = "JwY:d,-tP,A5)v-noaS68y'!-isulI2eVUID\"K-@+7;\"X-ozY3Ob8GVg&7*nOUc%ynm.4%;u,#5JS@tG2QbIxrs#qu+&8inh*1PLMvle'67wUev-+Q7w\"fGo5$:O";
 
-    string _plainText3 =  "Behold, I am sending you out as sheep in the midst of wolves, so be wise as serpents and innocent as doves. Beware of men, for they will deliver you over to courts and flog you in their synagogues, and you will be dragged before governors and kings for my sake, to bear witness before them and the Gentiles. When they deliver you over, do not be anxious how you are to speak or what you are to say, for what you are to say will be given to you in that hour. For it is not you who speak, but the Spirit of your Father speaking through you. Brother will deliver brother over to death, and the father his child, and children will rise against parents and have them put to death, and you will be hated by all for my name's sake. But the one who endures to the end will be saved.";
+    string _plainText3 = "Behold, I am sending you out as sheep in the midst of wolves, so be wise as serpents and innocent as doves. Beware of men, for they will deliver you over to courts and flog you in their synagogues, and you will be dragged before governors and kings for my sake, to bear witness before them and the Gentiles. When they deliver you over, do not be anxious how you are to speak or what you are to say, for what you are to say will be given to you in that hour. For it is not you who speak, but the Spirit of your Father speaking through you. Brother will deliver brother over to death, and the father his child, and children will rise against parents and have them put to death, and you will be hated by all for my name's sake. But the one who endures to the end will be saved.";
     string _cipherText3 = "lM0jJoSt5t8)!*-tym(;8d'M&%u.&-#EvUI-MVoK+*V)Xdt*c ub'(ZhlH,CnBXz!SG.Pv5O(q#$u#m4@9w NWTd'vM&8-F7XqCLxyLIGygn,emk@QpVJEN0: 95Q?e(- ZNU$z2i&cjCbf6O;gA.28kY?3khf3u!vOS94Lv'3v,r43qCe8 )ap$MSjHU;w5Dt+R!jiWJOvsP2vS+3w))Lw?un 9HWiv1@'y@?;NB1;1P6tKZIIJqS@H u.8wj75\"39,g+WkwCL!*,TjlI*2IV!Z97:Qy'&06yqi\"Wy8m,fsb1YvJ;ieqe4?.KG+CB@J&v;im3DW;r3.er.Q3q!K zOCD'gCIr!lw'McRZrW7,6w+53h8YN6F:1ZH@\"J:P+WjvV%$3HQ'xcQj+C*L(Ub-Habf#zNoNU46en'UBdhlKNRb0?nSa9J:kApjf\"$VNINirl$;bKQG!:S,rA; KBTa8&(4fmpw74y6bq7Fq-EJSXlDrLx,hW4H$fc1 i@h!5K%kBrWt(zy3D310XLr.sU+Z*B% *vrA.E' U4ap1ry.&(yf.dEKmRp2z*(Nn0*A*Qo!2Rr 33Qe7h )Z1-DDuu;6mS:k45;@1YjT:7mH1D\"AN9fYTi(H3vRcFg6f6DzW9@P4g,7GXJXXk(j.Ij :r:u\"zHx&9*Y)WeWdUsILd#9d6u%ehMGhYxo0?&WYikN3C@G88amy$.&&*8Awx1nyJAsn*#PZm3q5(MLC1hfXMMAz+#He6l:SKfPwSr gUiAoN.zDifw";
 
     Stopwatch _stopwatchForStats = new Stopwatch();
@@ -27,9 +27,13 @@ internal class SelfTestMode : IMode
     {
         var results = 0;
 
+        Console.WriteLine("------------------------------");
         if (Test(_plainText1, _cipherText1) == true) results++;
+        Console.WriteLine("\n------------------------------");
         if (Test(_plainText2, _cipherText2) == true) results++;
+        Console.WriteLine("\n------------------------------");
         if (Test(_plainText3, _cipherText3) == true) results++;
+        Console.WriteLine("\n------------------------------");
 
         Console.WriteLine($"\n{results}/3 tests passed.");
     }
@@ -51,13 +55,13 @@ internal class SelfTestMode : IMode
 
     private string FirstTest(string plainText, string cipherText, Kryptor kryptor)
     {
-        Console.WriteLine($"\nChecking:\n\n{plainText}\n");
+        Console.WriteLine($"\nChecking:\n\n{plainText}\n\n");
 
         _stopwatchForStats.Start();
         var testCipherText = kryptor.Encrypt("Jesus", plainText);
         _stopwatchForStats.Stop();
 
-        Console.WriteLine($"\nEncrypted as:\n\n{testCipherText}\n");
+        Console.WriteLine($"\n\nEncrypted as:\n\n{testCipherText}\n");
         Console.WriteLine($"Which should match:\n\n{cipherText}\n");
         return testCipherText;
     }
@@ -67,7 +71,7 @@ internal class SelfTestMode : IMode
         var testPlainText = kryptor.Decrypt("Jesus", cipherText);
         _stopwatchForStats.Stop();
 
-        Console.WriteLine($"\nDecrypted as:\n\n{testPlainText}\n");
+        Console.WriteLine($"\n\nDecrypted as:\n\n{testPlainText}\n");
         return testPlainText;
     }
     private static bool CheckResults(string plainText, string cipherText, string testCipherText, string testPlainText)
