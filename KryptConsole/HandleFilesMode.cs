@@ -106,7 +106,7 @@ internal class HandleFilesMode: IMode
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(), backgroundWorker);
+        var kryptor = new Kryptor(new Betor(Betor.EncryptCharacterUsingShift, Betor.DecryptCharacterUsingShift), backgroundWorker);
 
         var cipherText = kryptor.Encrypt(passphrase, message);
 
@@ -152,7 +152,7 @@ internal class HandleFilesMode: IMode
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(), backgroundWorker);
+        var kryptor = new Kryptor(new Betor(Betor.EncryptCharacterUsingShift, Betor.DecryptCharacterUsingShift), backgroundWorker);
 
         var plainText = kryptor.Decrypt(passphrase, cipherText);
 

@@ -46,7 +46,7 @@ internal class InterActiveMode : IMode
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(), backgroundWorker);
+        var kryptor = new Kryptor(new Betor(Betor.EncryptCharacterUsingShift, Betor.DecryptCharacterUsingShift), backgroundWorker);
 
         _cipherText = kryptor.Encrypt(passphrase, message);
 
@@ -73,7 +73,7 @@ internal class InterActiveMode : IMode
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(), backgroundWorker);
+        var kryptor = new Kryptor(new Betor(Betor.EncryptCharacterUsingShift, Betor.DecryptCharacterUsingShift), backgroundWorker);
 
         _message = kryptor.Decrypt(passphrase, cipherText);
 
