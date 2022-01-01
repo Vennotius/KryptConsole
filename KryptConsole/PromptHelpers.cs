@@ -131,7 +131,7 @@ public static class PromptHelpers
         if (File.Exists(output) == true)
         {
             Console.WriteLine("That file already exists. Enter a filename for a file that does not exist.");
-            PromptForFilename();
+            output = PromptForFilename();
         }
 
         return output;
