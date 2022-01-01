@@ -1,139 +1,139 @@
 ﻿using Krypt2Library;
 
-public static class PromptHelpers
+namespace KryptConsole
 {
-    public static string PromptForMessage()
+    public static class PromptHelpers
     {
-        return Prompt("\nMessage:\n");
-    }
-    public static string PromptTwiceForPassword()
-    {
-        string output = "";
-
-        var firstInput = PromptOnceForPassword("\nPassphrase: ");
-        var secondInput = PromptOnceForPassword("\nEnter it again: ");
-
-        if (firstInput == secondInput)
+        public static string PromptForMessage()
         {
-            output = firstInput;
+            return Prompt("\nMessage:\n");
         }
-        else
+        public static string PromptTwiceForPassword()
         {
-            Console.WriteLine("\nSecond input did not match the first. Try again...");
-            output = PromptTwiceForPassword();
-        }
+            var firstInput = PromptOnceForPassword("\nPassphrase: ");
+            var secondInput = PromptOnceForPassword("\nEnter it again: ");
 
-        return output;
-    }
-
-    public static string PromptForCipherText()
-    {
-        return Prompt("\nEnter text to decrypt:\n");
-    }
-    public static string PromptForPassword(CryptType type)
-    {
-        string output = "";
-
-        switch (type)
-        {
-            case CryptType.Encryption:
-                output = PromptTwiceForPassword();
-                break;
-            case CryptType.Decryption:
-                output = PromptOnceForPassword("\nPassphrase: ");
-                break;
-        }
-
-        return output;
-    }
-
-    public static string Prompt(string promptMessage)
-    {
-        string output = "";
-
-        Console.Write(promptMessage);
-        var input = Console.ReadLine();
-
-        if (string.IsNullOrEmpty(input))
-        {
-            Console.WriteLine("Invalid input. Try again...");
-            output = Prompt(promptMessage);
-        }
-        else
-        {
-            output = input;
-        }
-
-        return output;
-    }
-    public static string PromptOnceForPassword(string promptMessage)
-    {
-        string output = "";
-
-        Console.Write(promptMessage);
-        var input = GetInputWhileHidingCharacters();
-
-        if (string.IsNullOrWhiteSpace(input))
-        {
-            Console.WriteLine("Invalid input. Try again...");
-            output = PromptOnceForPassword(promptMessage);
-        }
-        else
-        {
-            output = input;
-        }
-
-        return output;
-    }
-    public static string GetInputWhileHidingCharacters()
-    {
-        var output = "";
-
-        ConsoleKeyInfo key;
-        while (true)
-        {
-            key = Console.ReadKey(true);
-
-            if (key.Key != ConsoleKey.Enter)
+            string output;
+            if (firstInput == secondInput)
             {
-                if (key.Key == ConsoleKey.Backspace && output.Length > 0)
-                {
-                    output = output.Substring(0, output.Length - 1);
-                }
-                else
-                {
-                    output += key.KeyChar;
-                }
+                output = firstInput;
             }
-            else break;
+            else
+            {
+                Console.WriteLine("\nSecond input did not match the first. Try again...");
+                output = PromptTwiceForPassword();
+            }
+
+            return output;
         }
 
-        return output;
-    }
-
-
-    public static string PromptIfWantToSaveToFile()
-    {
-        var output = "";
-        
-        var shouldSaveToFile = PromptHelpers.Prompt("\nDo you want to save this to a file (y/n)? ").ToLower();
-        if (shouldSaveToFile == "y" || shouldSaveToFile == "yes")
+        public static string PromptForCipherText()
         {
-            output = PromptForFilename();
+            return Prompt("\nEnter text to decrypt:\n");
         }
-
-        return output;
-    }
-    public static string PromptForFilename()
-    {
-        var output = PromptHelpers.Prompt("Enter filename: ");
-
-        if (File.Exists(output) == true)
+        public static string PromptForPassword(CryptType type)
         {
-            Console.WriteLine("That file already exists. Enter a filename for a file that does not exist.");
-            output = PromptForFilename();
+            string output = "";
+
+            switch (type)
+            {
+                case CryptType.Encryption:
+                    output = PromptTwiceForPassword();
+                    break;
+                case CryptType.Decryption:
+                    output = PromptOnceForPassword("\nPassphrase: ");
+                    break;
+            }
+
+            return output;
         }
 
-        return output;
+        public static string Prompt(string promptMessage)
+        {
+            Console.Write(promptMessage);
+            var input = Console.ReadLine();
+
+            string output;
+            if (string.IsNullOrEmpty(input))
+            {
+                Console.WriteLine("Invalid input. Try again...");
+                output = Prompt(promptMessage);
+            }
+            else
+            {
+                output = input;
+            }
+
+            return output;
+        }
+        public static string PromptOnceForPassword(string promptMessage)
+        {
+            Console.Write(promptMessage);
+            var input = GetInputWhileHidingCharacters();
+
+            string output;
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                Console.WriteLine("Invalid input. Try again...");
+                output = PromptOnceForPassword(promptMessage);
+            }
+            else
+            {
+                output = input;
+            }
+
+            return output;
+        }
+        public static string GetInputWhileHidingCharacters()
+        {
+            var output = "";
+
+            ConsoleKeyInfo key;
+            while (true)
+            {
+                key = Console.ReadKey(true);
+
+                if (key.Key != ConsoleKey.Enter)
+                {
+                    if (key.Key == ConsoleKey.Backspace && output.Length > 0)
+                    {
+                        output = output[0..^1];
+                    }
+                    else
+                    {
+                        output += key.KeyChar;
+                    }
+                }
+                else break;
+            }
+
+            return output;
+        }
+
+
+        public static string PromptIfWantToSaveToFile()
+        {
+            var output = "";
+
+            var shouldSaveToFile = Prompt("\nDo you want to save this to a file (y/n)? ").ToLower();
+            if (shouldSaveToFile == "y" || shouldSaveToFile == "yes")
+            {
+                output = PromptForFilename();
+            }
+
+            return output;
+        }
+        public static string PromptForFilename()
+        {
+            var output = Prompt("Enter filename: ");
+
+            if (File.Exists(output) == true)
+            {
+                Console.WriteLine("That file already exists. Enter a filename for a file that does not exist.");
+                output = PromptForFilename();
+            }
+
+            return output;
+        }
     }
 }

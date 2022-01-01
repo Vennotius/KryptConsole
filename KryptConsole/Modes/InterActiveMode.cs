@@ -1,4 +1,5 @@
 ﻿using Krypt2Library;
+using KryptConsole;
 using System.Diagnostics;
 
 internal class InterActiveMode : IMode
@@ -6,7 +7,7 @@ internal class InterActiveMode : IMode
     private string _message = "";
     private string _passphrase = "";
     private string _cipherText = "";
-    private Stopwatch _stopwatch = new Stopwatch();
+    private readonly Stopwatch _stopwatch = new();
 
     public void Run()
     {
@@ -81,7 +82,7 @@ internal class InterActiveMode : IMode
     }
     
 
-    private void ShowResultsOnScreen(string results)
+    private static void ShowResultsOnScreen(string results)
     {
         Console.WriteLine("\n\n-------\nResult:\n-------");
         Console.WriteLine(results);
@@ -101,8 +102,8 @@ internal class InterActiveMode : IMode
         if (e.ProgressPercentage == 0)
         {
             _stopwatch.Start();
-            var cursorPosition = Console.GetCursorPosition();
-            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top + 1);
+            var (Left, Top) = Console.GetCursorPosition();
+            Console.SetCursorPosition(Left, Top + 1);
             return;
         }
 

@@ -1,4 +1,5 @@
 ﻿using Krypt2Library;
+using KryptConsole;
 using System.Diagnostics;
 
 internal class HandleFilesMode: IMode
