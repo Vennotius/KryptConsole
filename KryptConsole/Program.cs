@@ -2,23 +2,13 @@
 
 IMode mode;
 
-switch (args.Length)
+mode = args.Length switch
 {
-    case 0:
-        mode = new InterActiveMode();
-        break;
-    case 1 when args[0] == "--test":
-        mode = new SelfTestMode();
-        break;
-    case 1 when args[0] == "--benchmark":
-        mode = new BenchmarkMode();
-        break;
-    case 1 when args[0] == "--help" || args[0] == "help" || args[0] == "-h" || args[0] == "-H":
-        mode = new ShowHelpMode();
-        break;
-    default:
-        mode = new HandleFilesMode(args);
-        break;
-}
+    0 => new InterActiveMode(),
+    1 when args[0] == "--test" => new SelfTestMode(),
+    1 when args[0] == "--benchmark" => new BenchmarkMode(),
+    1 when args[0] == "--help" || args[0] == "help" || args[0] == "-h" || args[0] == "-H" => new ShowHelpMode(),
+    _ => new HandleFilesMode(args),
+};
 
 mode.Run();

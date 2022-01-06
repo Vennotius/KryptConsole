@@ -1,4 +1,5 @@
 ﻿using Krypt2Library;
+using KryptConsole;
 using System.Diagnostics;
 using System.Text;
 
@@ -53,7 +54,7 @@ internal class BenchmarkMode : IMode
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(Betor.EncryptCharacterUsingShuffledAlphabet, Betor.DecryptCharacterUsingShuffledAlphabet), backgroundWorker);
+        var kryptor = new Kryptor(new Betor(CharacterSwapMethod.Shuffle), backgroundWorker);
 
         kryptor.Encrypt("benchmark", _justALongString);
         _results += ReportResults("Shuffle");
@@ -66,7 +67,7 @@ internal class BenchmarkMode : IMode
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(Betor.EncryptCharacterUsingShift, Betor.DecryptCharacterUsingShift), backgroundWorker);
+        var kryptor = new Kryptor(new Betor(CharacterSwapMethod.Shift), backgroundWorker);
 
         kryptor.Encrypt("benchmark", _justALongString);
         _results += ReportResults("Shift");

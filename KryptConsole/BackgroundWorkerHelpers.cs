@@ -1,28 +1,33 @@
 ﻿using System.ComponentModel;
 
-public static class BackgroundWorkerHelpers
+namespace KryptConsole
 {
-    public static BackgroundWorker CreateBackgroundWorker()
+    public static class BackgroundWorkerHelpers
     {
-        var backgroundWorker = new BackgroundWorker();
-        backgroundWorker.WorkerReportsProgress = true;
-        backgroundWorker.ProgressChanged += ReportProgress;
+        public static BackgroundWorker CreateBackgroundWorker()
+        {
+            var backgroundWorker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true
+            };
+            backgroundWorker.ProgressChanged += ReportProgress;
 
-        return backgroundWorker;
-    }
-    private static void ReportProgress(object? sender, ProgressChangedEventArgs e)
-    {
-        var cursorPosition = Console.GetCursorPosition();
-        var progress = $"Progress: {e.ProgressPercentage}%";
-        
-        Console.Write(progress);
-        if (cursorPosition.Top > 0)
-        {
-            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top-1);
+            return backgroundWorker;
         }
-        else
+        private static void ReportProgress(object? sender, ProgressChangedEventArgs e)
         {
-            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
+            var (Left, Top) = Console.GetCursorPosition();
+            var progress = $"Progress: {e.ProgressPercentage}%";
+
+            Console.Write(progress);
+            if (Top > 0)
+            {
+                Console.SetCursorPosition(Left, Top - 1);
+            }
+            else
+            {
+                Console.SetCursorPosition(Left, Top);
+            }
         }
     }
 }

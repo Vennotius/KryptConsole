@@ -1,4 +1,6 @@
 ﻿using Krypt2Library;
+using KryptConsole;
+using System.ComponentModel;
 using System.Diagnostics;
 
 internal class SelfTestMode : IMode
@@ -52,10 +54,10 @@ internal class SelfTestMode : IMode
     {
         bool result;
 
-        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
-        backgroundWorker.ProgressChanged += ReportTimeRemaining;
+        //var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
+        //backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(Betor.EncryptCharacterUsingShift, Betor.DecryptCharacterUsingShift), backgroundWorker);
+        var kryptor = new Kryptor(new Betor(CharacterSwapMethod.Shift), null);
 
         string testCipherText = FirstTest(plainText, cipherText, kryptor);
         string testPlainText = SecondTest(cipherText, kryptor);
@@ -102,23 +104,6 @@ internal class SelfTestMode : IMode
         return result;
     }
 
-    private void ReportStatistics()
-    {
-        var totalLength = _plainText1.Length;
-        totalLength += _plainText2.Length;
-        totalLength += _plainText3.Length;
-        totalLength += _cipherText1.Length;
-        totalLength += _cipherText2.Length;
-        totalLength += _cipherText3.Length;
-
-        var totalTime = _stopwatchForStats.Elapsed.TotalSeconds;
-
-        Console.WriteLine("\nStatistics:\n-----------");
-        Console.WriteLine($"\nEncrypted & Decrypted {totalLength} characters in {totalTime:0.00} seconds.");
-        Console.WriteLine($"\n{(totalLength / totalTime):0.0} characters per second.");
-        Console.WriteLine($"{(totalLength / totalTime) * 60:0} characters per minute.");
-        Console.WriteLine($"{(totalLength / totalTime) * 60 * 60:0} characters per hour.\n");
-    }
     private void ReportTimeRemaining(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
     {
         if (e.ProgressPercentage == 0)

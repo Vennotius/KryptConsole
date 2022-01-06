@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 internal class HandleFilesMode: IMode
 {
-    private Stopwatch _stopwatch = new Stopwatch();
+    private readonly Stopwatch _stopwatch = new();
     List<string> FileNames { get; set; } = new List<string>();
     CryptType? WhatToDo { get; set; } = null;
 
@@ -107,13 +107,13 @@ internal class HandleFilesMode: IMode
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(Betor.EncryptCharacterUsingShift, Betor.DecryptCharacterUsingShift), backgroundWorker);
+        var kryptor = new Kryptor(new Betor(CharacterSwapMethod.Shift), backgroundWorker);
 
         var cipherText = kryptor.Encrypt(passphrase, message);
 
         return cipherText;
     }
-    private void PromptToSaveFile(string cipherText)
+    private static void PromptToSaveFile(string cipherText)
     {
         string filename = PromptHelpers.PromptIfWantToSaveToFile();
 
@@ -122,7 +122,7 @@ internal class HandleFilesMode: IMode
             SaveToFile(filename, cipherText);
         }
     }
-    private void SaveToFile(string filename, string text)
+    private static void SaveToFile(string filename, string text)
     {
         //if (File.Exists($"{filename}{newExtension}"))
         //{
@@ -153,14 +153,14 @@ internal class HandleFilesMode: IMode
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(Betor.EncryptCharacterUsingShift, Betor.DecryptCharacterUsingShift), backgroundWorker);
+        var kryptor = new Kryptor(new Betor(CharacterSwapMethod.Shift), backgroundWorker);
 
         var plainText = kryptor.Decrypt(passphrase, cipherText);
 
         return plainText;
     }
 
-    private bool IsValidFile(string arg)
+    private static bool IsValidFile(string arg)
     {
         bool output = true;
         
@@ -169,7 +169,7 @@ internal class HandleFilesMode: IMode
         return output;
     }
 
-    private void ShowResultsOnScreen(string results)
+    private static void ShowResultsOnScreen(string results)
     {
         Console.WriteLine("\n\n-------\nResult:\n-------");
         Console.WriteLine(results);
@@ -180,8 +180,8 @@ internal class HandleFilesMode: IMode
         if (e.ProgressPercentage == 0)
         {
             _stopwatch.Start();
-            var cursorPosition = Console.GetCursorPosition();
-            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top + 1);
+            var (Left, Top) = Console.GetCursorPosition();
+            Console.SetCursorPosition(Left, Top + 1);
             return;
         }
 
