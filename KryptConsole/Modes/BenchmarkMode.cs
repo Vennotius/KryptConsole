@@ -45,6 +45,9 @@ internal class BenchmarkMode : IMode
 
         Console.WriteLine("\n\nBenchmarking Shift...\n");
         BenchmarkForShift();
+
+        BenchmarkForGusto();
+        //Console.WriteLine("\n\nBenchmarking Gusto...\n");
     }
 
     private void BenchmarkForShuffle()
@@ -71,6 +74,26 @@ internal class BenchmarkMode : IMode
 
         kryptor.Encrypt("benchmark", _justALongString);
         _results += ReportResults("Shift");
+    }
+
+    private void BenchmarkForGusto()
+    {
+        _justALongString = GenerateLongString(500000);
+
+        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
+        backgroundWorker.ProgressChanged += ReportTimeRemaining;
+
+        var kryptor = new Kryptor(new Gusto(), backgroundWorker);
+        _stopwatch.Start();
+        kryptor.Encrypt("benchmark", _justALongString);
+
+        var totalChars = _justALongString.Length;
+        var time = _stopwatch.Elapsed.TotalSeconds;
+        var rate = _justALongString.Length / _stopwatch.Elapsed.TotalSeconds;
+
+        _stopwatch.Reset();
+
+        Console.WriteLine($"\nResults for Gusto:\n{totalChars} characters in {time:0.00} seconds = {rate:0} characters/second.");
     }
 
     private string ReportResults(string cipher)
