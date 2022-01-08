@@ -46,13 +46,13 @@ internal class BenchmarkMode : IMode
         Console.WriteLine("\n\nBenchmarking Shift...\n");
         BenchmarkForShift();
 
+        Console.WriteLine("\n\nBenchmarking Gusto...\n");
         BenchmarkForGusto();
-        //Console.WriteLine("\n\nBenchmarking Gusto...\n");
     }
 
     private void BenchmarkForShuffle()
     {
-        _justALongString = GenerateLongString(1000);
+        _justALongString = GenerateLongString(3500);
 
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
@@ -65,7 +65,7 @@ internal class BenchmarkMode : IMode
 
     private void BenchmarkForShift()
     {
-        _justALongString = GenerateLongString(2000000);
+        _justALongString = GenerateLongString(8000000);
 
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
@@ -78,7 +78,7 @@ internal class BenchmarkMode : IMode
 
     private void BenchmarkForGusto()
     {
-        _justALongString = GenerateLongString(500000);
+        _justALongString = GenerateLongString(2500000);
 
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
