@@ -57,7 +57,7 @@ internal class SelfTestMode : IMode
         //var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         //backgroundWorker.ProgressChanged += ReportTimeRemaining;
 
-        var kryptor = new Kryptor(new Betor(CharacterSwapMethod.Shift), null);
+        var kryptor = new Kryptor(new Gusto(), null);
 
         string testCipherText = FirstTest(plainText, cipherText, kryptor);
         string testPlainText = SecondTest(cipherText, kryptor);
