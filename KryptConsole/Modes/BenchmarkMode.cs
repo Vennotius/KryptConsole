@@ -78,7 +78,7 @@ internal class BenchmarkMode : IMode
 
     private void BenchmarkForGusto()
     {
-        _justALongString = GenerateLongString(2500000);
+        _justALongString = GenerateLongString(6000000);
 
         var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
         backgroundWorker.ProgressChanged += ReportTimeRemaining;
