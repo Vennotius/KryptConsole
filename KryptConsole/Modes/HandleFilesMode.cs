@@ -104,10 +104,7 @@ internal class HandleFilesMode: IMode
 
     private string EncyptMessage(string passphrase, string message)
     {
-        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
-        backgroundWorker.ProgressChanged += ReportTimeRemaining;
-
-        var kryptor = new Kryptor(new Gusto(), backgroundWorker);
+        var kryptor = new Kryptor(new Gusto());
 
         var cipherText = kryptor.Encrypt(passphrase, message);
 
@@ -150,10 +147,7 @@ internal class HandleFilesMode: IMode
 
     private string DecyptMessage(string passphrase, string cipherText)
     {
-        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
-        backgroundWorker.ProgressChanged += ReportTimeRemaining;
-
-        var kryptor = new Kryptor(new Gusto(), backgroundWorker);
+        var kryptor = new Kryptor(new Gusto());
 
         var plainText = kryptor.Decrypt(passphrase, cipherText);
 

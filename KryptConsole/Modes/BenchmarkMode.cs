@@ -40,89 +40,31 @@ internal class BenchmarkMode : IMode
 
     private void RunBenchmarks()
     {
-        Console.WriteLine("Benchmarking Shuffle...\n");
-        BenchmarkForShuffle();
+        //Console.WriteLine("Benchmarking Shuffle...\n");
+        //BenchmarkForShuffle();
 
-        Console.WriteLine("\n\nBenchmarking Shift...\n");
-        BenchmarkForShift();
+        //Console.WriteLine("\n\nBenchmarking Shift...\n");
+        //BenchmarkForShift();
 
-        Console.WriteLine("\n\nBenchmarking Gusto...\n");
-        BenchmarkForGusto();
+        Console.WriteLine("Benchmarking...");
+        BenchmarkForGusto(10000);
+        BenchmarkForGusto(100000);
+        BenchmarkForGusto(1000000);
     }
 
-    private void BenchmarkForShuffle()
+    private void BenchmarkForGusto(int length)
     {
-        _justALongString = GenerateLongString(3500);
+        _justALongString = GenerateLongString(length);
 
-        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
-        backgroundWorker.ProgressChanged += ReportTimeRemaining;
-
-        var kryptor = new Kryptor(new Betor(CharacterSwapMethod.Shuffle), backgroundWorker);
-
-        kryptor.Encrypt("benchmark", _justALongString);
-        _results += ReportResults("Shuffle");
-    }
-
-    private void BenchmarkForShift()
-    {
-        _justALongString = GenerateLongString(8000000);
-
-        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
-        backgroundWorker.ProgressChanged += ReportTimeRemaining;
-
-        var kryptor = new Kryptor(new Betor(CharacterSwapMethod.Shift), backgroundWorker);
-
-        kryptor.Encrypt("benchmark", _justALongString);
-        _results += ReportResults("Shift");
-    }
-
-    private void BenchmarkForGusto()
-    {
-        _justALongString = GenerateLongString(8000000);
-
-        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
-        backgroundWorker.ProgressChanged += ReportTimeRemaining;
-
-        var kryptor = new Kryptor(new Gusto(), backgroundWorker);
+        var kryptor = new Kryptor(new Gusto());
         _stopwatch.Start();
         kryptor.Encrypt("benchmark", _justALongString);
+        _stopwatch.Stop();
 
-        var totalChars = _justALongString.Length;
         var time = _stopwatch.Elapsed.TotalSeconds;
-        var rate = _justALongString.Length / _stopwatch.Elapsed.TotalSeconds;
-
-        _stopwatch.Reset();
-
-        Console.WriteLine($"\nResults for Gusto:\n{totalChars} characters in {time:0.00} seconds = {rate:0} characters/second.");
-    }
-
-    private string ReportResults(string cipher)
-    {
         var totalChars = _justALongString.Length;
-        var time = _stopwatch.Elapsed.TotalSeconds;
-        var rate = _justALongString.Length / _stopwatch.Elapsed.TotalSeconds;
+        var rate = totalChars / time;
 
-        _stopwatch.Reset();
-        
-        return $"\nResults for {cipher}:\n{totalChars} characters in {time:0.00} seconds = {rate:0} characters/second.\n";
-    }
-
-    private void ReportTimeRemaining(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
-    {
-        if (e.ProgressPercentage == 0)
-        {
-            _stopwatch.Start();
-            var (Left, Top) = Console.GetCursorPosition();
-            Console.SetCursorPosition(Left, Top + 1);
-            return;
-        }
-
-        var elapsed = _stopwatch.Elapsed.TotalSeconds;
-        var projected = elapsed * (100 / (double)e.ProgressPercentage);
-        var remaining = TimeSpan.FromSeconds(projected - elapsed + 1);
-
-        Console.WriteLine($"Time Remaining: {remaining.PrettyHours()}");
-
-        if (e.ProgressPercentage == 100) _stopwatch.Stop();
+        Console.WriteLine($"\n{totalChars} characters in {time:0.00} seconds = {rate:0} characters/second.");
     }
 }

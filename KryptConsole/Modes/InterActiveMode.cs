@@ -44,10 +44,7 @@ internal class InterActiveMode : IMode
     }
     private string EncyptMessage(string passphrase, string message)
     {
-        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
-        backgroundWorker.ProgressChanged += ReportTimeRemaining;
-
-        var kryptor = new Kryptor(new Gusto(), backgroundWorker);
+        var kryptor = new Kryptor(new Gusto());
 
         _cipherText = kryptor.Encrypt(passphrase, message);
 
@@ -71,10 +68,7 @@ internal class InterActiveMode : IMode
     }
     private string DecryptMessage(string passphrase, string cipherText)
     {
-        var backgroundWorker = BackgroundWorkerHelpers.CreateBackgroundWorker();
-        backgroundWorker.ProgressChanged += ReportTimeRemaining;
-
-        var kryptor = new Kryptor(new Gusto(), backgroundWorker);
+        var kryptor = new Kryptor(new Gusto());
 
         _message = kryptor.Decrypt(passphrase, cipherText);
 
