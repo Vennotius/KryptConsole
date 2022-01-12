@@ -1,5 +1,4 @@
 ﻿using Krypt2Library;
-using KryptConsole;
 using System.Diagnostics;
 using System.Text;
 
@@ -7,18 +6,12 @@ internal class BenchmarkMode : IMode
 {
     private string _justALongString = "";
     private readonly Stopwatch _stopwatch = new();
-    private string _results = "";
-
-    public BenchmarkMode()
-    {
-        
-    }
 
     private static string GenerateLongString(int length)
     {
         var output = new StringBuilder();
 
-        for (int i = 0; i < length/10; i++)
+        for (int i = 0; i < length / 10; i++)
         {
             output.Append("0123456789");
         }
@@ -29,24 +22,15 @@ internal class BenchmarkMode : IMode
     public void Run()
     {
         Console.CursorVisible = false;
-        Console.WriteLine();
 
         RunBenchmarks();
-
-        Console.WriteLine($"\n{_results}");
-
+        Console.WriteLine();
         Console.CursorVisible = true;
     }
 
     private void RunBenchmarks()
     {
-        //Console.WriteLine("Benchmarking Shuffle...\n");
-        //BenchmarkForShuffle();
-
-        //Console.WriteLine("\n\nBenchmarking Shift...\n");
-        //BenchmarkForShift();
-
-        Console.WriteLine("Benchmarking...");
+        ConsoleHelpers.WriteInColor("----------\nBenchmark:\n----------\n", ConsoleColor.DarkBlue);
         BenchmarkForGusto(10000);
         BenchmarkForGusto(100000);
         BenchmarkForGusto(1000000);
@@ -65,6 +49,6 @@ internal class BenchmarkMode : IMode
         var totalChars = _justALongString.Length;
         var rate = totalChars / time;
 
-        Console.WriteLine($"\n{totalChars} characters in {time:0.00} seconds = {rate:0} characters/second.");
+        Console.WriteLine($"{totalChars} characters in {time:0.00} seconds = {rate:0} characters/second.");
     }
 }

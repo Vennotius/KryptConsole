@@ -2,7 +2,7 @@
 using KryptConsole;
 using System.Diagnostics;
 
-internal class HandleFilesMode: IMode
+internal class HandleFilesMode : IMode
 {
     private readonly Stopwatch _stopwatch = new();
     List<string> FileNames { get; set; } = new List<string>();
@@ -28,13 +28,13 @@ internal class HandleFilesMode: IMode
     }
 
     public void Run()
-    {   
+    {
         if (FileNames.Count == 0)
         {
             Console.WriteLine("No valid filenames given.");
             return;
         }
-        
+
         ListFilesOnConsole();
 
         if (WhatToDo == null)
@@ -157,7 +157,7 @@ internal class HandleFilesMode: IMode
     private static bool IsValidFile(string arg)
     {
         bool output = true;
-        
+
         if (File.Exists(arg) == false) output = false;
 
         return output;

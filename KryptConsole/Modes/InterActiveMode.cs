@@ -11,7 +11,8 @@ internal class InterActiveMode : IMode
 
     public void Run()
     {
-        Console.Write("What would you like to do?\n\n1. Encrypt\n2. Decrypt\n\n1 or 2? ");
+        ConsoleHelpers.WriteInColor("\nWhat would you like to do?\n\n", ConsoleColor.DarkBlue);
+        Console.Write("1. Encrypt\n2. Decrypt\n\n1 or 2? ");
         var activity = Console.ReadLine();
 
         switch (activity)
@@ -23,7 +24,7 @@ internal class InterActiveMode : IMode
                 Decryption();
                 break;
             default:
-                Console.WriteLine("Invalid option. Exiting.");
+                ConsoleHelpers.WriteInColor("\nInvalid option. Exiting.\n\n", ConsoleColor.Red);
                 break;
         }
     }
@@ -74,11 +75,11 @@ internal class InterActiveMode : IMode
 
         return _message;
     }
-    
+
 
     private static void ShowResultsOnScreen(string results)
     {
-        Console.WriteLine("\n\n-------\nResult:\n-------");
+        ConsoleHelpers.WriteInColor("\n-------\nResult:\n-------\n", ConsoleColor.DarkGreen);
         Console.WriteLine(results);
     }
     private void SaveToFile()
@@ -90,7 +91,7 @@ internal class InterActiveMode : IMode
             Console.WriteLine($"Written to file '{filename}'.");
         }
     }
-    
+
     private void ReportTimeRemaining(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
     {
         if (e.ProgressPercentage == 0)

@@ -20,7 +20,7 @@ namespace KryptConsole
             }
             else
             {
-                Console.WriteLine("\nSecond input did not match the first. Try again...");
+                ConsoleHelpers.WriteInColor("\nSecond input did not match the first. Try again...\n", ConsoleColor.DarkRed);
                 output = PromptTwiceForPassword();
             }
 
@@ -50,13 +50,13 @@ namespace KryptConsole
 
         public static string Prompt(string promptMessage)
         {
-            Console.Write(promptMessage);
+            ConsoleHelpers.WriteInColor(promptMessage, ConsoleColor.DarkBlue);
             var input = Console.ReadLine();
 
             string output;
             if (string.IsNullOrEmpty(input))
             {
-                Console.WriteLine("Invalid input. Try again...");
+                ConsoleHelpers.WriteInColor("Invalid input. Try again...\n", ConsoleColor.DarkRed);
                 output = Prompt(promptMessage);
             }
             else
@@ -68,13 +68,13 @@ namespace KryptConsole
         }
         public static string PromptOnceForPassword(string promptMessage)
         {
-            Console.Write(promptMessage);
+            ConsoleHelpers.WriteInColor(promptMessage, ConsoleColor.DarkBlue);
             var input = GetInputWhileHidingCharacters();
 
             string output;
             if (string.IsNullOrWhiteSpace(input))
             {
-                Console.WriteLine("Invalid input. Try again...");
+                ConsoleHelpers.WriteInColor("Invalid input. Try again...\n", ConsoleColor.DarkRed);
                 output = PromptOnceForPassword(promptMessage);
             }
             else

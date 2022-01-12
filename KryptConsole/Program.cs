@@ -1,6 +1,4 @@
-﻿using Krypt2Library;
-
-IMode mode;
+﻿IMode mode;
 
 mode = args.Length switch
 {
