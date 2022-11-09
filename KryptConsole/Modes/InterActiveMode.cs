@@ -1,5 +1,6 @@
 ﻿using Krypt2Library;
 using KryptConsole;
+using KryptConsole.Modes;
 using System.Diagnostics;
 
 internal class InterActiveMode : IMode

@@ -1,4 +1,7 @@
-﻿public interface IMode
+﻿namespace KryptConsole.Modes
 {
-    void Run();
+    public interface IMode
+    {
+        void Run();
+    }
 }

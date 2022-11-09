@@ -1,4 +1,5 @@
 ﻿using Krypt2Library;
+using KryptConsole.Modes;
 
 internal class SelfTestMode : IMode
 {

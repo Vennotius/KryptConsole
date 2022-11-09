@@ -1,4 +1,5 @@
 ﻿using Krypt2Library;
+using KryptConsole.Modes;
 using System.Diagnostics;
 using System.Text;
 

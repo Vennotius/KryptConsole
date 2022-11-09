@@ -1,4 +1,6 @@
-﻿internal class ShowHelpMode : IMode
+﻿using KryptConsole.Modes;
+
+internal class ShowHelpMode : IMode
 {
     public void Run()
     {

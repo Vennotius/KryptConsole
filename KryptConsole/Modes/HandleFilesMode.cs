@@ -1,5 +1,6 @@
 ﻿using Krypt2Library;
 using KryptConsole;
+using KryptConsole.Modes;
 using System.Diagnostics;
 
 internal class HandleFilesMode : IMode
@@ -88,7 +89,7 @@ internal class HandleFilesMode : IMode
         }
     }
 
-    private void Encrypt(string filename, string message)
+    private static void Encrypt(string filename, string message)
     {
         var passphrase = PromptHelpers.PromptForPassword(CryptType.Encryption);
         Console.WriteLine($"\nEncrypting '{filename}':");
@@ -102,7 +103,7 @@ internal class HandleFilesMode : IMode
         PromptToSaveFile(cipherText);
     }
 
-    private string EncyptMessage(string passphrase, string message)
+    private static string EncyptMessage(string passphrase, string message)
     {
         var kryptor = new Kryptor(new Gusto());
 
@@ -131,7 +132,7 @@ internal class HandleFilesMode : IMode
     }
 
 
-    private void Decrypt(string filename, string cipherText)
+    private static void Decrypt(string filename, string cipherText)
     {
         var passphrase = PromptHelpers.PromptForPassword(CryptType.Decryption);
         Console.WriteLine($"\nDecrypting '{filename}':");
@@ -145,7 +146,7 @@ internal class HandleFilesMode : IMode
         PromptToSaveFile(plainText);
     }
 
-    private string DecyptMessage(string passphrase, string cipherText)
+    private static string DecyptMessage(string passphrase, string cipherText)
     {
         var kryptor = new Kryptor(new Gusto());
 

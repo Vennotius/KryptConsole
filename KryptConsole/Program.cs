@@ -1,4 +1,6 @@
-﻿IMode mode;
+﻿using KryptConsole.Modes;
+
+IMode mode;
 
 mode = args.Length switch
 {
