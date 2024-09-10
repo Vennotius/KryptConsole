@@ -1,5 +1,8 @@
 ﻿using KryptConsole.Modes;
 
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+Console.InputEncoding = System.Text.Encoding.UTF8;
+
 IMode mode;
 mode = args.Length switch
 {
