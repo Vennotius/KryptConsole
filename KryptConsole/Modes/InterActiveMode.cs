@@ -12,7 +12,7 @@ internal class InterActiveMode : IMode
 
     public void Run()
     {
-        ConsoleHelpers.WriteInColor("\nWhat would you like to do?\n\n", ConsoleColor.DarkBlue);
+        ConsoleHelpers.WriteInColor("\nWhat would you like to do?\n\n", ConsoleColor.DarkCyan);
         Console.Write("1. Encrypt\n2. Decrypt\n\n1 or 2? ");
         var activity = Console.ReadLine();
 
@@ -46,7 +46,7 @@ internal class InterActiveMode : IMode
     }
     private string EncyptMessage(string passphrase, string message)
     {
-        var kryptor = new Kryptor(new Gusto());
+        var kryptor = new Kryptor<Gusto>();
 
         _cipherText = kryptor.Encrypt(passphrase, message);
 
@@ -70,7 +70,7 @@ internal class InterActiveMode : IMode
     }
     private string DecryptMessage(string passphrase, string cipherText)
     {
-        var kryptor = new Kryptor(new Gusto());
+        var kryptor = new Kryptor<Gusto>();
 
         _message = kryptor.Decrypt(passphrase, cipherText);
 

@@ -2,9 +2,9 @@
 {
     public static void WriteInColor(string text, ConsoleColor color)
     {
-        var consoleColor = Console.ForegroundColor;
+        var startingForegroundColor = Console.ForegroundColor;
         Console.ForegroundColor = color;
         Console.Write(text);
-        Console.ForegroundColor = consoleColor;
+        Console.ForegroundColor = startingForegroundColor;
     }
 }

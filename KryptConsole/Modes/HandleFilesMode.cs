@@ -105,7 +105,7 @@ internal class HandleFilesMode : IMode
 
     private static string EncyptMessage(string passphrase, string message)
     {
-        var kryptor = new Kryptor(new Gusto());
+        var kryptor = new Kryptor<Gusto>();
 
         var cipherText = kryptor.Encrypt(passphrase, message);
 
@@ -148,7 +148,7 @@ internal class HandleFilesMode : IMode
 
     private static string DecyptMessage(string passphrase, string cipherText)
     {
-        var kryptor = new Kryptor(new Gusto());
+        var kryptor = new Kryptor<Gusto>();
 
         var plainText = kryptor.Decrypt(passphrase, cipherText);
 

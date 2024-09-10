@@ -50,7 +50,7 @@ namespace KryptConsole
 
         public static string Prompt(string promptMessage)
         {
-            ConsoleHelpers.WriteInColor(promptMessage, ConsoleColor.DarkBlue);
+            ConsoleHelpers.WriteInColor(promptMessage, ConsoleColor.DarkCyan);
             var input = Console.ReadLine();
 
             string output;
@@ -68,7 +68,7 @@ namespace KryptConsole
         }
         public static string PromptOnceForPassword(string promptMessage)
         {
-            ConsoleHelpers.WriteInColor(promptMessage, ConsoleColor.DarkBlue);
+            ConsoleHelpers.WriteInColor(promptMessage, ConsoleColor.DarkCyan);
             var input = GetInputWhileHidingCharacters();
 
             string output;

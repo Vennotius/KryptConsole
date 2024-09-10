@@ -1,23 +1,18 @@
 ﻿using Krypt2Library;
 using KryptConsole.Modes;
 using System.Diagnostics;
-using System.Text;
 
 internal class BenchmarkMode : IMode
 {
-    private string _justALongString = "";
-    private readonly Stopwatch _stopwatch = new();
-
     private static string GenerateLongString(int length)
     {
-        var output = new StringBuilder();
+        string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,.!"; // just some chars
+        char[] output = new char[length];
 
-        for (int i = 0; i < length / 10; i++)
-        {
-            output.Append("0123456789");
-        }
+        for (int i = 0; i < length; i++)
+            output[i] = chars[i % chars.Length];
 
-        return output.ToString();
+        return new string(output);
     }
 
     public void Run()
@@ -31,25 +26,37 @@ internal class BenchmarkMode : IMode
 
     private void RunBenchmarks()
     {
-        ConsoleHelpers.WriteInColor("----------\nBenchmark:\n----------\n", ConsoleColor.DarkBlue);
-        BenchmarkForGusto(10000);
-        BenchmarkForGusto(100000);
-        BenchmarkForGusto(1000000);
+        // JIT warmup.
+        for (int i = 0; i < 10; i++)
+            _ = Benchmark<Gusto>(10_000, true);
+
+        ConsoleHelpers.WriteInColor("----------\nBenchmark:\n----------\n", ConsoleColor.DarkCyan);
+        _ = Benchmark<Gusto>(1_000, false);
+        _ = Benchmark<Gusto>(10_000, false);
+        _ = Benchmark<Gusto>(100_000, false);
     }
 
-    private void BenchmarkForGusto(int length)
+    private string Benchmark<T>(int length, bool dryRun) where T : ICipher, new()
     {
-        _justALongString = GenerateLongString(length);
+        var kryptor = new Kryptor<T>();
+        var justALongString = GenerateLongString(length);
 
-        var kryptor = new Kryptor(new Gusto());
-        _stopwatch.Start();
-        kryptor.Encrypt("benchmark", _justALongString);
-        _stopwatch.Stop();
+        if (dryRun)
+        {
+            return kryptor.Encrypt("benchmark", justALongString);
+        }
+        else
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            string result = kryptor.Encrypt("benchmark", justALongString);
+            stopwatch.Stop();
+            var time = stopwatch.Elapsed.TotalSeconds;
+            var totalChars = justALongString.Length;
+            var rate = totalChars / time;
 
-        var time = _stopwatch.Elapsed.TotalSeconds;
-        var totalChars = _justALongString.Length;
-        var rate = totalChars / time;
-
-        Console.WriteLine($"{totalChars} characters in {time:0.00} seconds = {rate:0} characters/second.");
+            Console.WriteLine($"{totalChars, 8} characters in {time:0.0000} seconds = {rate, 10:0} characters/second.");
+            return result;
+        }
     }
 }

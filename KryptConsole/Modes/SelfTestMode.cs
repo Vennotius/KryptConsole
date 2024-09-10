@@ -24,7 +24,7 @@ internal class SelfTestMode : IMode
     private static void RunTestsAndReportResults()
     {
         var results = 0;
-        ConsoleHelpers.WriteInColor("--------\nTesting:\n--------\n", ConsoleColor.DarkBlue);
+        ConsoleHelpers.WriteInColor("--------\nTesting:\n--------\n", ConsoleColor.DarkCyan);
 
         for (int i = 0; i < _testCases.Count; i++)
         {
@@ -39,7 +39,7 @@ internal class SelfTestMode : IMode
 
     private static bool Test((string Name, string Passphrase, string PlainText, string CipherText) testCase)
     {
-        var kryptor = new Kryptor(new Gusto());
+        var kryptor = new Kryptor<Gusto>();
 
         string encrypted = kryptor.Encrypt(testCase.Passphrase, testCase.PlainText);
         string decrypted = kryptor.Decrypt(testCase.Passphrase, encrypted);
