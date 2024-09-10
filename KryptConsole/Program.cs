@@ -1,7 +1,8 @@
-﻿using KryptConsole.Modes;
+﻿using Krypt2Library;
+using KryptConsole.Modes;
 
 IMode mode;
-
+new SelfTestMode().Run();
 mode = args.Length switch
 {
     0 => new InterActiveMode(),

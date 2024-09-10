@@ -3,19 +3,14 @@ using KryptConsole.Modes;
 
 internal class SelfTestMode : IMode
 {
-    const string _plainText1 = "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.";
-    const string _cipherText1 = "YM,@N#ojuZ.0IZ@dSSB6:(C(\".50NS@6p:D$:uh\"re@\"eK?xkNF;i.L\"o;ZfdztV.Svsb4zVN2vxQYNno!kw\"u2Zm4.d+75B#Jj-u@iE6exL-YSV6aEop10Kd3Ke";
-
-    const string _plainText2 = "En effet, Dieu a tant aimé le monde qu’il a donné son Fils unique afin que quiconque croit en lui ne périsse pas mais ait la vie éternelle.";
-    const string _cipherText2 = "’éZMAom\"oX!qFZAYWéTRu;ACn.: 3’xtb1V!D$-P\")V7!CBK,z\"Le(h8g5uhlR+Cv VteQi'&64N&véZFUs&sTBq8Uj$ &-vhH’éq'%zhBTRJPO??.rgmkIv)InETxDQ8*p’GS25td9@ ";
-
-    const string _plainText3 = "Want so lief het God die wêreld gehad, dat Hy sy eniggebore Seun gegee het, sodat elkeen wat in Hom glo, nie verlore mag gaan nie, maar die ewige lewe kan hê.";
-    const string _cipherText3 = "ê'z7F;+zimUfWbM#tS5I7:1v7Lb#exW&tP!Im\"dW!IrVbUb:KV9a,ae YwgJcyyA3xTiQe5$UN2ê'-4EFzNd06rSR &aiTYj$vJpQtvw#tLARO\";8ZjEf&1)G65Gy8b?êM,#YLSG2Y$da+w6L)nP;W&2Kz'RV4Q";
-
-    const string _plainText4 = "Graphemes test: 👩‍👩‍👧‍👦 g̈ நி";
-    const string _cipherText4 = "👩‍👩‍👧‍👦g̈நி0RXBp!wIvstVNY39.fuJh";
-
-    const string _passphrase = "Jesus";
+    private static List<(string Name, string Passphrase, string PlainText, string CipherText)> _testCases = new()
+    {
+        ("English text", "Jesus", "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.", "N xd+V&;i.@qb3+1!Rtl5'Id*i6D6mNVvt?clm9HNU:w)(1zF%t*SI+&7&ova@'VIS;mT3SJHD'x60x6Cgn6GJ+f1VmIPhrGEQi9%bZll2Klu8 6BZ@PJiDuKw5:"),
+        ("French", "Jesus", "En effet, Dieu a tant aimé le monde qu’il a donné son Fils unique afin que quiconque croit en lui ne périsse pas mais ait la vie éternelle.", "’éUV ui(PJMm8p52CndxOpé#a%c kOéACn;’tXx:LSMPJ3a 5f’,5,R49GéFZdcELv3qJ&u3YoJa7k71FSj?t2HdOrxg\"IB;*Sw;Vmo5GP%aXaK\"qu\"2u8’kW970Jl,&fXVL)O7;KQbn;"),
+        ("Afrikaans", "Jesus", "Want so lief het God die wêreld gehad, dat Hy sy eniggebore Seun gegee het, sodat elkeen wat in Hom glo, nie verlore mag gaan nie, maar die ewige lewe kan hê.", "êgYbQY?BO%#6),D)l+ZMZYI-bn;7?frJ?6y@W7OOsA1êg.lJW-'y:b. v:hP\"!$&a1y;Yun%Z9êRH:iK%,EYOZ*d0w!racUyNA:GvJrG Iyh5e!kB;fD)\"RemH,DGEz%;mj6l.wJ$Xj.?qK6+tLT;FtEHF-zCPr"),
+        ("Graphemes", "Jesus", "Graphemes test: 👩‍👩‍👧‍👦 g̈ நி", "👩‍👩‍👧‍👦g̈நிqVQ%vR(s7a5v#?d,g̈Dw*T"),
+        ("Linebreaks", "Jesus", $"MultipleLines{Environment.NewLine}are being tested{Environment.NewLine}here.", "\n*;\nQ* y,u#\"(uv'jv\nz0*S*700*\"fjFk4L;D"),
+    };
 
     public void Run()
     {
@@ -23,70 +18,46 @@ internal class SelfTestMode : IMode
 
         RunTestsAndReportResults();
 
-        // ReportStatistics();
-
         Console.CursorVisible = true;
     }
-
-
 
     private static void RunTestsAndReportResults()
     {
         var results = 0;
         ConsoleHelpers.WriteInColor("--------\nTesting:\n--------\n", ConsoleColor.DarkBlue);
 
-        Console.Write("1. English text: ");
-        if (Test(_plainText1, _cipherText1) == true) results++;
-        Console.Write("2. French text: ");
-        if (Test(_plainText2, _cipherText2) == true) results++;
-        Console.Write("3. Afrikaans text: ");
-        if (Test(_plainText3, _cipherText3) == true) results++;
-        Console.Write("4. Graphemes: ");
-        if (Test(_plainText4, _cipherText4) == true) results++;
+        for (int i = 0; i < _testCases.Count; i++)
+        {
+            (string Name, string Passphrase, string PlainText, string CipherText) @case = _testCases[i];
+            Console.Write($"{i + 1}. {@case.Name}: ");
+            if (Test(@case)) 
+                results++;
+        }
 
-        Console.WriteLine($"\n{results}/4 tests passed.\n");
+        Console.WriteLine($"\n{results}/{_testCases.Count} tests passed.\n");
     }
-    private static bool Test(string plainText, string cipherText)
-    {
-        bool result;
 
+    private static bool Test((string Name, string Passphrase, string PlainText, string CipherText) testCase)
+    {
         var kryptor = new Kryptor(new Gusto());
 
-        string testCipherText = FirstTest(plainText, kryptor);
-        string testPlainText = SecondTest(cipherText, kryptor);
-        result = CheckResults(plainText, cipherText, testCipherText, testPlainText);
+        string encrypted = kryptor.Encrypt(testCase.Passphrase, testCase.PlainText);
+        string decrypted = kryptor.Decrypt(testCase.Passphrase, encrypted);
 
-        return result;
-    }
-
-    private static string FirstTest(string plainText, Kryptor kryptor)
-    {
-        var testCipherText = kryptor.Encrypt(_passphrase, plainText);
-
-        return testCipherText;
-    }
-    private static string SecondTest(string cipherText, Kryptor kryptor)
-    {
-        var testPlainText = kryptor.Decrypt(_passphrase, cipherText);
-
-        return testPlainText;
-    }
-    private static bool CheckResults(string plainText, string cipherText, string testCipherText, string testPlainText)
-    {
-        bool result;
-        if (cipherText == testCipherText && plainText == testPlainText)
+        if (testCase.PlainText == decrypted)
         {
-            ConsoleHelpers.WriteInColor("TEST PASSED\n", ConsoleColor.DarkGreen);
+            if (testCase.CipherText == encrypted)
+                ConsoleHelpers.WriteInColor("TEST PASSED\n", ConsoleColor.DarkGreen);
+            else
+                ConsoleHelpers.WriteInColor("Encrypt-decrypt OK, but cipher has changed\n", ConsoleColor.DarkYellow);
 
-            result = true;
+            return true;
         }
         else
         {
             ConsoleHelpers.WriteInColor("TEST FAILED\n", ConsoleColor.DarkRed);
 
-            result = false;
+            return false;
         }
-
-        return result;
     }
 }
